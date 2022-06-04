@@ -2,6 +2,7 @@ package carteira.domain.service;
 
 import carteira.domain.exception.NegocioException;
 import carteira.domain.model.ReceitaMensal;
+import carteira.domain.model.TipoCategoria;
 import carteira.domain.repository.ReceitaMensalRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,11 @@ public class ReceitaMensalService {
     @Transactional
     public ReceitaMensal salvar(ReceitaMensal receitaMensal) {
         receitaMensal.setCategoria(categoriaService.buscar(receitaMensal.getCategoria().getId()));
+
+        if (!receitaMensal.getCategoria().getTipo().equals(TipoCategoria.RECEITA)) {
+            throw new NegocioException("A categoria deve ser do tipo: RECEITA");
+        }
+
         receitaMensal.setUsuario(usuarioService.buscar(receitaMensal.getUsuario().getId()));
 
         return repository.save(receitaMensal);

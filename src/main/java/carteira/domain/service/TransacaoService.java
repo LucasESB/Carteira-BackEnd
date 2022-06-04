@@ -1,6 +1,7 @@
 package carteira.domain.service;
 
 import carteira.domain.exception.NegocioException;
+import carteira.domain.model.TipoTransacao;
 import carteira.domain.model.Transacao;
 import carteira.domain.repository.TransacaoRepository;
 import carteira.utilitarios.DataHora;
@@ -46,7 +47,14 @@ public class TransacaoService {
 
     @Transactional
     public Transacao salvar(Transacao transacao) {
-        transacao.setCategoria(categoriaService.buscar(transacao.getCategoria().getId()));
+
+        if (!transacao.getTipo().equals(TipoTransacao.TRANSFERENCIA) && transacao.getCategoria() == null) {
+            throw new NegocioException("Categoria é um campo obrigatório");
+        } else if (transacao.getCategoria() != null) {
+            transacao.setCategoria(categoriaService.buscar(transacao.getCategoria().getId()));
+            //TODO: Verificar se o tipo da conta é igual ao tipo da categoria
+        }
+
         transacao.setConta(contaService.buscar(transacao.getConta().getId()));
         transacao.setUsuario(usuarioService.buscar(transacao.getUsuario().getId()));
 

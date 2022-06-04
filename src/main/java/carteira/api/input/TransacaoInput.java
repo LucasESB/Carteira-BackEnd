@@ -19,7 +19,6 @@ public class TransacaoInput {
     private TipoTransacao tipo;
 
     @Valid
-    @NotNull
     private CategoriaReduzidoInput categoria;
 
     @Valid

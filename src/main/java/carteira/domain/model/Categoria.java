@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
@@ -20,6 +21,8 @@ public class Categoria {
 
     private String nome;
     private TipoCategoria tipo;
+
+    @DBRef
     private Usuario usuario;
     private boolean excluido;
 }
