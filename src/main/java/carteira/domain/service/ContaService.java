@@ -46,7 +46,19 @@ public class ContaService {
     }
 
     @Transactional
-    public void excluir(Conta conta){
+    public Conta adicionarValor(Conta conta, double valor) {
+        conta.adicionarValor(valor);
+        return repository.save(conta);
+    }
+
+    @Transactional
+    public Conta removerValor(Conta conta, double valor) {
+        conta.removerValor(valor);
+        return repository.save(conta);
+    }
+
+    @Transactional
+    public void excluir(Conta conta) {
         conta.setExcluido(true);
         repository.save(conta);
     }

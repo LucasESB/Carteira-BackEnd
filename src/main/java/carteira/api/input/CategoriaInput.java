@@ -14,7 +14,7 @@ import javax.validation.constraints.Size;
 public class CategoriaInput {
 
     @NotBlank
-    @Size(min = 5, max = 20)
+    @Size(min = 5, max = 30)
     private String nome;
 
     @NotNull

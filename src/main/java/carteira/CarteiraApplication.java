@@ -5,9 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class CarteiraApplication {
-
-	public static void main(String[] args) {
-		SpringApplication.run(CarteiraApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(CarteiraApplication.class, args);
+    }
 }

@@ -26,4 +26,12 @@ public class Conta {
     private Usuario usuario;
 
     private boolean excluido;
+
+    public void adicionarValor(double valor) {
+        setSaldo(getSaldo() + valor);
+    }
+
+    public void removerValor(double valor) {
+        setSaldo(getSaldo() - valor);
+    }
 }

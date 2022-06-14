@@ -1,6 +1,7 @@
 package carteira.domain.service;
 
 import carteira.domain.exception.NegocioException;
+import carteira.domain.model.TipoCategoria;
 import carteira.domain.model.TipoTransacao;
 import carteira.domain.model.Transacao;
 import carteira.domain.repository.TransacaoRepository;
@@ -52,13 +53,39 @@ public class TransacaoService {
             throw new NegocioException("Categoria é um campo obrigatório");
         } else if (transacao.getCategoria() != null) {
             transacao.setCategoria(categoriaService.buscar(transacao.getCategoria().getId()));
-            //TODO: Verificar se o tipo da conta é igual ao tipo da categoria
+
+            if (transacao.getTipo().equals(TipoTransacao.RECEITA) && !transacao.getCategoria().getTipo().equals(TipoCategoria.RECEITA)) {
+                throw new NegocioException("O tipo da categoria deve ser do mesmo tipo da transação");
+            } else if (transacao.getTipo().equals(TipoTransacao.DESPESA) && !transacao.getCategoria().getTipo().equals(TipoCategoria.DESPESA)) {
+                throw new NegocioException("O tipo da categoria deve ser do mesmo tipo da transação");
+            }
         }
 
         transacao.setConta(contaService.buscar(transacao.getConta().getId()));
         transacao.setUsuario(usuarioService.buscar(transacao.getUsuario().getId()));
+        Transacao transacaoAnterior = buscar(transacao.getId());
 
-        return repository.save(transacao);
+        transacao = repository.save(transacao);
+
+        if (transacao.getId() != null && !transacao.getId().isEmpty()) {
+            estornarValorTransacao(transacaoAnterior);
+        }
+
+        if (transacao.getTipo().equals(TipoTransacao.RECEITA)) {
+            contaService.adicionarValor(transacao.getConta(), transacao.getValor());
+        } else if (transacao.getTipo().equals(TipoTransacao.DESPESA)) {
+            contaService.removerValor(transacao.getConta(), transacao.getValor());
+        }
+
+        return transacao;
+    }
+
+    private void estornarValorTransacao(Transacao transacao) {
+        if (transacao.getTipo().equals(TipoTransacao.RECEITA)) {
+            contaService.removerValor(transacao.getConta(), transacao.getValor());
+        } else if (transacao.getTipo().equals(TipoTransacao.DESPESA)) {
+            contaService.adicionarValor(transacao.getConta(), transacao.getValor());
+        }
     }
 
     @Transactional
