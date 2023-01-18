@@ -3,6 +3,7 @@ package carteira.api.controller;
 import carteira.api.input.UsuarioInput;
 import carteira.api.model.UsuarioModel;
 import carteira.assembler.UsuarioAssembler;
+import carteira.domain.exception.NegocioException;
 import carteira.domain.model.Usuario;
 import carteira.domain.service.UsuarioService;
 import lombok.AllArgsConstructor;
@@ -51,7 +52,7 @@ public class UsuarioController {
 
     @DeleteMapping("/{usuarioId}")
     public ResponseEntity<Void> deletar(@PathVariable String usuarioId) {
-        usuarioService.excluir(usuarioService.buscar(usuarioId));
+        usuarioService.excluir(usuarioId);
         return ResponseEntity.noContent().build();
     }
 }

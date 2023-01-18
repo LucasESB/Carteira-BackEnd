@@ -17,7 +17,7 @@ public class UsuarioService {
 
     @Transactional
     public List<Usuario> buscar() {
-        return repository.findByExcluido(false);
+        return repository.findAll();
     }
 
     @Transactional
@@ -31,7 +31,9 @@ public class UsuarioService {
 
     @Transactional
     public void verificarSeUsuarioExiste(String usuarioId) {
-        buscar(usuarioId);
+        if (!repository.existsById(usuarioId)) {
+            throw new NegocioException("Usuário não encontrado");
+        }
     }
 
     @Transactional
@@ -46,8 +48,7 @@ public class UsuarioService {
     }
 
     @Transactional
-    public void excluir(Usuario usuario) {
-        usuario.setExcluido(true);
-        repository.save(usuario);
+    public void excluir(String usuarioId) {
+        repository.deleteById(usuarioId);
     }
 }

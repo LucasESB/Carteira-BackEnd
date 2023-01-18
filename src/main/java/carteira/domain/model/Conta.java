@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -19,19 +20,11 @@ public class Conta {
     @EqualsAndHashCode.Include
     private String id;
 
+    @Indexed(unique = true)
     private String nome;
+
     private double saldo;
 
     @DBRef
     private Usuario usuario;
-
-    private boolean excluido;
-
-    public void adicionarValor(double valor) {
-        setSaldo(getSaldo() + valor);
-    }
-
-    public void removerValor(double valor) {
-        setSaldo(getSaldo() - valor);
-    }
 }

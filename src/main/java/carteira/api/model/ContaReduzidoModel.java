@@ -9,5 +9,4 @@ public class ContaReduzidoModel {
 
     private String id;
     private String nome;
-    private double saldo;
 }

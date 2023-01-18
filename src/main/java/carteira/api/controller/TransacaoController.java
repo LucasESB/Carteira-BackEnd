@@ -23,7 +23,7 @@ public class TransacaoController {
     private TransacaoAssembler transacaoAssembler;
 
     @GetMapping
-    public List<TransacaoModel> buscar(@RequestParam("dataInicial") String dataInicial,
+    public List<TransacaoModel> buscar(@RequestParam(value = "dataInicial") String dataInicial,
                                        @RequestParam(value = "dataFinal") String dataFinal) {
         return transacaoAssembler.toCollectionModel(transacaoService.buscar(dataInicial, dataFinal));
     }
@@ -56,7 +56,7 @@ public class TransacaoController {
 
     @DeleteMapping("/{transacaoId}")
     public ResponseEntity<Void> deletar(@PathVariable String transacaoId) {
-        transacaoService.excluir(transacaoService.buscar(transacaoId));
+        transacaoService.excluir(transacaoId);
         return ResponseEntity.noContent().build();
     }
 }

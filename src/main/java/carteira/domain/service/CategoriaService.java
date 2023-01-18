@@ -18,7 +18,7 @@ public class CategoriaService {
 
     @Transactional
     public List<Categoria> buscar() {
-        return repository.findByExcluido(false);
+        return repository.findAll();
     }
 
     @Transactional
@@ -29,7 +29,9 @@ public class CategoriaService {
 
     @Transactional
     public void verificarSeCategoriaExiste(String categoriaId) {
-        buscar(categoriaId);
+        if (!repository.existsById(categoriaId)) {
+            throw new NegocioException("Categoria não encontrada");
+        }
     }
 
     @Transactional
@@ -46,8 +48,7 @@ public class CategoriaService {
     }
 
     @Transactional
-    public void excluir(Categoria categoria){
-        categoria.setExcluido(true);
-        repository.save(categoria);
+    public void excluir(String categoriaId){
+        repository.deleteById(categoriaId);
     }
 }

@@ -21,8 +21,6 @@ public class Transacao {
     @EqualsAndHashCode.Include
     private String id;
 
-    private TipoTransacao tipo;
-
     @DBRef
     private Categoria categoria;
 
@@ -35,5 +33,4 @@ public class Transacao {
 
     @DBRef
     private Usuario usuario;
-    private boolean excluido;
 }

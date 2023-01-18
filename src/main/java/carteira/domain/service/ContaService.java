@@ -3,7 +3,13 @@ package carteira.domain.service;
 import carteira.domain.exception.NegocioException;
 import carteira.domain.model.Conta;
 import carteira.domain.repository.ContaRepository;
+import com.mongodb.client.result.UpdateResult;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +22,12 @@ public class ContaService {
     private ContaRepository repository;
     private UsuarioService usuarioService;
 
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
     @Transactional
     public List<Conta> buscar() {
-        return repository.findByExcluido(false);
+        return repository.findAll();
     }
 
     @Transactional
@@ -29,7 +38,9 @@ public class ContaService {
 
     @Transactional
     public void verificarSeContaExiste(String contaId) {
-        buscar(contaId);
+        if (!repository.existsById(contaId)) {
+            throw new NegocioException("Conta não encontrada");
+        }
     }
 
     @Transactional
@@ -46,20 +57,31 @@ public class ContaService {
     }
 
     @Transactional
-    public Conta adicionarValor(Conta conta, double valor) {
-        conta.adicionarValor(valor);
-        return repository.save(conta);
+    public boolean adicionarValor(String contaId, double valor) {
+        Query query = new Query(Criteria.where("id").is(contaId));
+
+        Update update = new Update();
+        update.inc("saldo", valor);
+
+        UpdateResult result = mongoTemplate.updateFirst(query, update, Conta.class);
+
+        return result.getModifiedCount() > 0;
     }
 
     @Transactional
-    public Conta removerValor(Conta conta, double valor) {
-        conta.removerValor(valor);
-        return repository.save(conta);
+    public boolean removerValor(String contaId, double valor) {
+        Query query = new Query(Criteria.where("id").is(contaId));
+
+        Update update = new Update();
+        update.inc("saldo", valor * (-1));
+
+        UpdateResult result = mongoTemplate.updateFirst(query, update, Conta.class);
+
+        return result.getModifiedCount() > 0;
     }
 
     @Transactional
-    public void excluir(Conta conta) {
-        conta.setExcluido(true);
-        repository.save(conta);
+    public void excluir(String contaId) {
+        repository.deleteById(contaId);
     }
 }

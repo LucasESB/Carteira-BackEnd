@@ -2,7 +2,6 @@ package carteira.domain.service;
 
 import carteira.domain.exception.NegocioException;
 import carteira.domain.model.TipoCategoria;
-import carteira.domain.model.TipoTransacao;
 import carteira.domain.model.Transacao;
 import carteira.domain.repository.TransacaoRepository;
 import carteira.utilitarios.DataHora;
@@ -43,54 +42,48 @@ public class TransacaoService {
 
     @Transactional
     public void verificarSeTransacaoExiste(String transacaoId) {
-        buscar(transacaoId);
+        if (!repository.existsById(transacaoId)) {
+            throw new NegocioException("Transação não encontrada");
+        }
     }
 
     @Transactional
     public Transacao salvar(Transacao transacao) {
-
-        if (!transacao.getTipo().equals(TipoTransacao.TRANSFERENCIA) && transacao.getCategoria() == null) {
-            throw new NegocioException("Categoria é um campo obrigatório");
-        } else if (transacao.getCategoria() != null) {
-            transacao.setCategoria(categoriaService.buscar(transacao.getCategoria().getId()));
-
-            if (transacao.getTipo().equals(TipoTransacao.RECEITA) && !transacao.getCategoria().getTipo().equals(TipoCategoria.RECEITA)) {
-                throw new NegocioException("O tipo da categoria deve ser do mesmo tipo da transação");
-            } else if (transacao.getTipo().equals(TipoTransacao.DESPESA) && !transacao.getCategoria().getTipo().equals(TipoCategoria.DESPESA)) {
-                throw new NegocioException("O tipo da categoria deve ser do mesmo tipo da transação");
-            }
-        }
-
+        transacao.setCategoria(categoriaService.buscar(transacao.getCategoria().getId()));
         transacao.setConta(contaService.buscar(transacao.getConta().getId()));
         transacao.setUsuario(usuarioService.buscar(transacao.getUsuario().getId()));
-        Transacao transacaoAnterior = buscar(transacao.getId());
+
+        //TODO: validar saldo da conta se a categoria for do tipo despesa
+
+        if (transacao.getId() != null && !transacao.getId().isEmpty()) {
+            Transacao transacaoAnterior = buscar(transacao.getId());
+            estornarValorTransacao(transacaoAnterior);
+            transacao.setDataCadastro(transacaoAnterior.getDataCadastro());
+        } else {
+            //buscar o valor da conta
+        }
 
         transacao = repository.save(transacao);
 
-        if (transacao.getId() != null && !transacao.getId().isEmpty()) {
-            estornarValorTransacao(transacaoAnterior);
-        }
-
-        if (transacao.getTipo().equals(TipoTransacao.RECEITA)) {
-            contaService.adicionarValor(transacao.getConta(), transacao.getValor());
-        } else if (transacao.getTipo().equals(TipoTransacao.DESPESA)) {
-            contaService.removerValor(transacao.getConta(), transacao.getValor());
+        if (transacao.getCategoria().getTipo().equals(TipoCategoria.RECEITA)) {
+            contaService.adicionarValor(transacao.getConta().getId(), transacao.getValor());
+        } else {
+            contaService.removerValor(transacao.getConta().getId(), transacao.getValor());
         }
 
         return transacao;
     }
 
     private void estornarValorTransacao(Transacao transacao) {
-        if (transacao.getTipo().equals(TipoTransacao.RECEITA)) {
-            contaService.removerValor(transacao.getConta(), transacao.getValor());
-        } else if (transacao.getTipo().equals(TipoTransacao.DESPESA)) {
-            contaService.adicionarValor(transacao.getConta(), transacao.getValor());
+        if (transacao.getCategoria().getTipo().equals(TipoCategoria.RECEITA)) {
+            contaService.removerValor(transacao.getConta().getId(), transacao.getValor());
+        } else {
+            contaService.adicionarValor(transacao.getConta().getId(), transacao.getValor());
         }
     }
 
     @Transactional
-    public void excluir(Transacao transacao) {
-        transacao.setExcluido(true);
-        repository.save(transacao);
+    public void excluir(String transacaoId) {
+        repository.deleteById(transacaoId);
     }
 }

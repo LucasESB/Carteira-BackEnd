@@ -1,6 +1,5 @@
 package carteira.api.input;
 
-import carteira.domain.model.TipoTransacao;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,18 +13,15 @@ import java.util.Date;
 @Getter
 @Setter
 public class TransacaoInput {
-
-    @NotNull
-    private TipoTransacao tipo;
-
     @Valid
+    @NotNull
     private CategoriaReduzidoInput categoria;
 
     @Valid
     @NotNull
     private ContaReduzidoInput conta;
 
-    @DecimalMin("0.00")
+    @DecimalMin("0.01")
     private double valor;
 
     @NotNull

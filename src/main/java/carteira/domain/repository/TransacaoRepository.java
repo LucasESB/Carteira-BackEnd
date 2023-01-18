@@ -9,7 +9,6 @@ import java.util.List;
 
 public interface TransacaoRepository extends MongoRepository<Transacao, String> {
 
-    @Query("{dataTransacao: {$gte: ?0, $lte: ?1}, excluido: false}")
+    @Query("{dataTransacao: {$gte: ?0, $lte: ?1}}")
     List<Transacao> findByDataTransacao(Date ini, Date fin);
-    List<Transacao> findByExcluido(boolean excluido);
 }

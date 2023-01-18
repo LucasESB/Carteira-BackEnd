@@ -1,6 +1,5 @@
 package carteira.api.model;
 
-import carteira.domain.model.TipoTransacao;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,7 +9,6 @@ import java.util.Date;
 @Setter
 public class TransacaoModel {
     private String id;
-    private TipoTransacao tipo;
     private CategoriaReduzidoModel categoria;
     private ContaReduzidoModel conta;
     private double valor;
@@ -18,5 +16,4 @@ public class TransacaoModel {
     private Date dataCadastro;
     private String descricao;
     private UsuarioReduzidoModel usuario;
-    private boolean excluido;
 }

@@ -9,6 +9,4 @@ import java.util.Optional;
 public interface CategoriaRepository extends MongoRepository<Categoria, String> {
 
     Optional<Categoria> findByNome(String nome);
-
-    List<Categoria> findByExcluido(boolean excluido);
 }

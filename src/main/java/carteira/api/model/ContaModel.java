@@ -11,5 +11,4 @@ public class ContaModel {
     private String nome;
     private double saldo;
     private UsuarioReduzidoModel usuario;
-    private boolean excluido;
 }

@@ -10,5 +10,4 @@ public interface UsuarioRepository extends MongoRepository<Usuario, String> {
 
     Optional<Usuario> findByUsuario(String usuario);
 
-    List<Usuario> findByExcluido(boolean excluido);
 }

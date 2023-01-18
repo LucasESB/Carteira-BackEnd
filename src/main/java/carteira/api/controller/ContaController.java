@@ -51,7 +51,7 @@ public class ContaController {
 
     @DeleteMapping("/{contaId}")
     public ResponseEntity<Void> deletar(@PathVariable String contaId) {
-        contaService.excluir(contaService.buscar(contaId));
+        contaService.excluir(contaId);
         return ResponseEntity.noContent().build();
     }
 }

@@ -11,6 +11,4 @@ public class UsuarioModel {
     private String nome;
     private String usuario;
     private String senha;
-    private boolean adm;
-    private boolean excluido;
 }

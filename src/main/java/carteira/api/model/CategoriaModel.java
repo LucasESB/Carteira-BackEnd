@@ -12,5 +12,4 @@ public class CategoriaModel {
     private String nome;
     private TipoCategoria tipo;
     private UsuarioReduzidoModel usuario;
-    private boolean excluido;
 }
