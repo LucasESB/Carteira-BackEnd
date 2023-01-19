@@ -30,7 +30,7 @@ public class TransacaoService {
 
             return repository.findByDataTransacao(data1, data2);
         } catch (ParseException ex) {
-            throw new NegocioException("A data informada deve está no formato yyyy-MM-dd");
+            throw new NegocioException("A data deve ser informada no formato 'yyyy-MM-dd'");
         }
     }
 
@@ -50,17 +50,21 @@ public class TransacaoService {
     @Transactional
     public Transacao salvar(Transacao transacao) {
         transacao.setCategoria(categoriaService.buscar(transacao.getCategoria().getId()));
-        transacao.setConta(contaService.buscar(transacao.getConta().getId()));
         transacao.setUsuario(usuarioService.buscar(transacao.getUsuario().getId()));
+        transacao.setConta(contaService.buscar(transacao.getConta().getId()));
 
-        //TODO: validar saldo da conta se a categoria for do tipo despesa
+        Transacao transacaoAnterior = null;
 
         if (transacao.getId() != null && !transacao.getId().isEmpty()) {
-            Transacao transacaoAnterior = buscar(transacao.getId());
+            transacaoAnterior = buscar(transacao.getId());
+        }
+
+        //TODO: Criar testes atualizando com contas diferentes, de categorias de tipo diferentes
+        varificarSaldoParaTransacaoInvalido(transacao, transacaoAnterior);
+
+        if (transacaoAnterior != null) {
             estornarValorTransacao(transacaoAnterior);
             transacao.setDataCadastro(transacaoAnterior.getDataCadastro());
-        } else {
-            //buscar o valor da conta
         }
 
         transacao = repository.save(transacao);
@@ -72,6 +76,30 @@ public class TransacaoService {
         }
 
         return transacao;
+    }
+
+    private void varificarSaldoParaTransacaoInvalido(Transacao transacao, Transacao transacaoAnterior) {
+        double saldoConta = 0.00;
+
+        if (!transacao.getCategoria().getTipo().equals(TipoCategoria.DESPESA)) {
+            return;
+        }
+
+        if (transacaoAnterior != null) {
+            if (!transacaoAnterior.getConta().getId().equals(transacao.getConta().getId())) {
+                saldoConta = transacao.getConta().getSaldo();
+            } else if (transacaoAnterior.getCategoria().getTipo().equals(TipoCategoria.RECEITA)) {
+                saldoConta = transacao.getConta().getSaldo() - transacaoAnterior.getValor();
+            } else {
+                saldoConta = transacao.getConta().getSaldo() + transacaoAnterior.getValor();
+            }
+        } else {
+            saldoConta = transacao.getConta().getSaldo();
+        }
+
+        if (transacao.getValor() > saldoConta) {
+            throw new NegocioException("O saldo da conta " + transacao.getConta().getNome() + " não é suficiente para realizar a transação");
+        }
     }
 
     private void estornarValorTransacao(Transacao transacao) {
