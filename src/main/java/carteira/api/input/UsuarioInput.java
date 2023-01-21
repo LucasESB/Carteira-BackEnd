@@ -15,10 +15,10 @@ public class UsuarioInput {
     private String nome;
 
     @NotBlank
-    @Size(min = 5, max = 10)
+    @Size(min = 5, max = 16)
     private String usuario;
 
     @NotBlank
-    @Size(min = 5, max = 8)
+    @Size(min = 5, max = 16)
     private String senha;
 }

@@ -22,16 +22,6 @@ public class UsuarioController {
     private UsuarioService usuarioService;
     private UsuarioAssembler usuarioAssembler;
 
-    @GetMapping
-    public List<UsuarioModel> buscar() {
-        return usuarioAssembler.toCollectionModel(usuarioService.buscar());
-    }
-
-    @GetMapping("/{usuarioId}")
-    public UsuarioModel buscar(@PathVariable String usuarioId) {
-        return usuarioAssembler.toModel(usuarioService.buscar(usuarioId));
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public UsuarioModel inseir(@Valid @RequestBody UsuarioInput usuarioInput) {
@@ -48,6 +38,16 @@ public class UsuarioController {
         usuario = usuarioService.salvar(usuario);
 
         return ResponseEntity.ok(usuarioAssembler.toModel(usuario));
+    }
+
+    @GetMapping
+    public List<UsuarioModel> buscar() {
+        return usuarioAssembler.toCollectionModel(usuarioService.buscar());
+    }
+
+    @GetMapping("/{usuarioId}")
+    public UsuarioModel buscar(@PathVariable String usuarioId) {
+        return usuarioAssembler.toModel(usuarioService.buscar(usuarioId));
     }
 
     @DeleteMapping("/{usuarioId}")
