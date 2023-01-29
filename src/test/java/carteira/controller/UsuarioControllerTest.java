@@ -1,6 +1,7 @@
 package carteira.controller;
 
 import carteira.domain.model.Usuario;
+import carteira.domain.service.UsuarioService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ public class UsuarioControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private UsuarioService usuarioService;
 
     @Test
     public void retornarSucesso_QuandoInserir() throws Exception {
@@ -60,21 +64,14 @@ public class UsuarioControllerTest {
         usuario.setUsuario("joselucas");
         usuario.setSenha("jose12345678");
 
-        MockHttpServletResponse response = mockMvc.perform(post("/usuarios")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(usuario)))
-                .andReturn()
-                .getResponse();
-
-        Usuario usuarioResponse = objectMapper.readValue(response.getContentAsString(), Usuario.class);
+        Usuario usuarioResponse = usuarioService.salvar(usuario);
 
         usuario.setId(usuarioResponse.getId());
         usuario.setNome("Eduardo");
         usuario.setUsuario("eduardo");
         usuario.setSenha("eduardo12345678");
 
-        response = mockMvc.perform(put("/usuarios/{usuarioId}", usuarioResponse.getId())
+        MockHttpServletResponse response = mockMvc.perform(put("/usuarios/{usuarioId}", usuarioResponse.getId())
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(usuario)))
@@ -104,18 +101,11 @@ public class UsuarioControllerTest {
         usuario.setUsuario("carlos");
         usuario.setSenha("carlos12345678");
 
-        MockHttpServletResponse response = mockMvc.perform(post("/usuarios")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(usuario)))
-                .andReturn()
-                .getResponse();
-
-        Usuario usuarioResponse = objectMapper.readValue(response.getContentAsString(), Usuario.class);
+        Usuario usuarioResponse = usuarioService.salvar(usuario);
 
         usuario.setId(usuarioResponse.getId());
 
-        response = mockMvc.perform(get("/usuarios/{usuarioId}", usuarioResponse.getId()))
+        MockHttpServletResponse response = mockMvc.perform(get("/usuarios/{usuarioId}", usuarioResponse.getId()))
                 .andReturn()
                 .getResponse();
 
@@ -130,20 +120,13 @@ public class UsuarioControllerTest {
     }
 
     @Test
-    public void retornarSucesso_Deletar() throws Exception {
+    public void retornarSucesso_QuandoDeletar() throws Exception {
         Usuario usuario = new Usuario();
         usuario.setNome("Joel Cardoso");
         usuario.setUsuario("joelCardoso");
         usuario.setSenha("joel12345678");
 
-        MockHttpServletResponse response = mockMvc.perform(post("/usuarios")
-                        .accept(MediaType.APPLICATION_JSON)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(usuario)))
-                .andReturn()
-                .getResponse();
-
-        Usuario usuarioResponse = objectMapper.readValue(response.getContentAsString(), Usuario.class);
+        Usuario usuarioResponse = usuarioService.salvar(usuario);
 
         mockMvc.perform(delete("/usuarios/{usuarioId}", usuarioResponse.getId()))
                 .andExpect(status().isNoContent());

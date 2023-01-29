@@ -21,16 +21,6 @@ public class ContaController {
     private ContaService contaService;
     private ContaAssembler contaAssembler;
 
-    @GetMapping
-    public List<ContaModel> buscar() {
-        return contaAssembler.toCollectionModel(contaService.buscar());
-    }
-
-    @GetMapping("/{contaId}")
-    public ContaModel buscar(@PathVariable String contaId) {
-        return contaAssembler.toModel(contaService.buscar(contaId));
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public ContaModel inserir(@Valid @RequestBody ContaInput input) {
@@ -47,6 +37,16 @@ public class ContaController {
         conta = contaService.salvar(conta);
 
         return ResponseEntity.ok(contaAssembler.toModel(conta));
+    }
+
+    @GetMapping
+    public List<ContaModel> buscar() {
+        return contaAssembler.toCollectionModel(contaService.buscar());
+    }
+
+    @GetMapping("/{contaId}")
+    public ContaModel buscar(@PathVariable String contaId) {
+        return contaAssembler.toModel(contaService.buscar(contaId));
     }
 
     @DeleteMapping("/{contaId}")

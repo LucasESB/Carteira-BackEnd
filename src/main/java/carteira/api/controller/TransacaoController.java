@@ -22,17 +22,6 @@ public class TransacaoController {
     private TransacaoService transacaoService;
     private TransacaoAssembler transacaoAssembler;
 
-    @GetMapping
-    public List<TransacaoModel> buscar(@RequestParam(value = "dataInicial") String dataInicial,
-                                       @RequestParam(value = "dataFinal") String dataFinal) {
-        return transacaoAssembler.toCollectionModel(transacaoService.buscar(dataInicial, dataFinal));
-    }
-
-    @GetMapping("/{transacaoId}")
-    public TransacaoModel buscar(@PathVariable String transacaoId) {
-        return transacaoAssembler.toModel(transacaoService.buscar(transacaoId));
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public TransacaoModel inserir(@Valid @RequestBody TransacaoInput input) {
@@ -52,6 +41,17 @@ public class TransacaoController {
         transacao = transacaoService.salvar(transacao);
 
         return ResponseEntity.ok(transacaoAssembler.toModel(transacao));
+    }
+
+    @GetMapping
+    public List<TransacaoModel> buscar(@RequestParam(value = "dataInicial") String dataInicial,
+                                       @RequestParam(value = "dataFinal") String dataFinal) {
+        return transacaoAssembler.toCollectionModel(transacaoService.buscar(dataInicial, dataFinal));
+    }
+
+    @GetMapping("/{transacaoId}")
+    public TransacaoModel buscar(@PathVariable String transacaoId) {
+        return transacaoAssembler.toModel(transacaoService.buscar(transacaoId));
     }
 
     @DeleteMapping("/{transacaoId}")

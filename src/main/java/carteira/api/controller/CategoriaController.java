@@ -21,16 +21,6 @@ public class CategoriaController {
     private CategoriaService categoriaService;
     private CategoriaAssembler categoriaAssembler;
 
-    @GetMapping
-    public List<CategoriaModel> buscar() {
-        return categoriaAssembler.toCollectionModel(categoriaService.buscar());
-    }
-
-    @GetMapping("/{categoriaId}")
-    public CategoriaModel buscar(@PathVariable String categoriaId) {
-        return categoriaAssembler.toModel(categoriaService.buscar(categoriaId));
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public CategoriaModel inserir(@Valid @RequestBody CategoriaInput input) {
@@ -47,6 +37,16 @@ public class CategoriaController {
         categoria = categoriaService.salvar(categoria);
 
         return ResponseEntity.ok(categoriaAssembler.toModel(categoria));
+    }
+
+    @GetMapping
+    public List<CategoriaModel> buscar() {
+        return categoriaAssembler.toCollectionModel(categoriaService.buscar());
+    }
+
+    @GetMapping("/{categoriaId}")
+    public CategoriaModel buscar(@PathVariable String categoriaId) {
+        return categoriaAssembler.toModel(categoriaService.buscar(categoriaId));
     }
 
     @DeleteMapping("/{categoriaId}")
