@@ -16,27 +16,6 @@ public class UsuarioService {
     private UsuarioRepository repository;
 
     @Transactional
-    public List<Usuario> buscar() {
-        return repository.findAll();
-    }
-
-    @Transactional
-    public Usuario buscar(String usuarioId) {
-        if (usuarioId == null) {
-            throw new NegocioException("Usuário não encontrado");
-        }
-        return repository.findById(usuarioId)
-                .orElseThrow(() -> new NegocioException("Usuário não encontrado"));
-    }
-
-    @Transactional
-    public void verificarSeUsuarioExiste(String usuarioId) {
-        if (!repository.existsById(usuarioId)) {
-            throw new NegocioException("Usuário não encontrado");
-        }
-    }
-
-    @Transactional
     public Usuario salvar(Usuario usuario) {
         Usuario usu = repository.findByUsuario(usuario.getUsuario()).orElse(null);
 
@@ -48,7 +27,35 @@ public class UsuarioService {
     }
 
     @Transactional
+    public List<Usuario> buscar() {
+        return repository.findAll();
+    }
+
+    @Transactional
+    public Usuario buscar(String usuarioId) {
+        if (usuarioId == null) {
+            throw new NegocioException("Id não informado");
+        }
+        return repository.findById(usuarioId)
+                .orElseThrow(() -> new NegocioException("Usuário não encontrado"));
+    }
+
+    @Transactional
+    public void verificarSeUsuarioExiste(String usuarioId) {
+        if (usuarioId == null) {
+            throw new NegocioException("Id não informado");
+        }
+
+        if (!repository.existsById(usuarioId)) {
+            throw new NegocioException("Usuário não encontrado");
+        }
+    }
+
+    @Transactional
     public void excluir(String usuarioId) {
+        if (usuarioId == null) {
+            throw new NegocioException("Id não informado");
+        }
         repository.deleteById(usuarioId);
     }
 }

@@ -17,24 +17,6 @@ public class CategoriaService {
     private UsuarioService usuarioService;
 
     @Transactional
-    public List<Categoria> buscar() {
-        return repository.findAll();
-    }
-
-    @Transactional
-    public Categoria buscar(String categoriaId) {
-        return repository.findById(categoriaId)
-                .orElseThrow(() -> new NegocioException("Categoria não encontrada"));
-    }
-
-    @Transactional
-    public void verificarSeCategoriaExiste(String categoriaId) {
-        if (!repository.existsById(categoriaId)) {
-            throw new NegocioException("Categoria não encontrada");
-        }
-    }
-
-    @Transactional
     public Categoria salvar(Categoria categoria) {
         Categoria cat = repository.findByNome(categoria.getNome()).orElse(null);
 
@@ -48,7 +30,36 @@ public class CategoriaService {
     }
 
     @Transactional
+    public List<Categoria> buscar() {
+        return repository.findAll();
+    }
+
+    @Transactional
+    public Categoria buscar(String categoriaId) {
+        if (categoriaId == null) {
+            throw new NegocioException("Id não informado");
+        }
+
+        return repository.findById(categoriaId)
+                .orElseThrow(() -> new NegocioException("Categoria não encontrada"));
+    }
+
+    @Transactional
+    public void verificarSeCategoriaExiste(String categoriaId) {
+        if (categoriaId == null) {
+            throw new NegocioException("Id não informado");
+        }
+
+        if (!repository.existsById(categoriaId)) {
+            throw new NegocioException("Categoria não encontrada");
+        }
+    }
+
+    @Transactional
     public void excluir(String categoriaId){
+        if (categoriaId == null) {
+            throw new NegocioException("Id não informado");
+        }
         repository.deleteById(categoriaId);
     }
 }

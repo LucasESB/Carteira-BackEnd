@@ -26,24 +26,6 @@ public class ContaService {
     private MongoTemplate mongoTemplate;
 
     @Transactional
-    public List<Conta> buscar() {
-        return repository.findAll();
-    }
-
-    @Transactional
-    public Conta buscar(String contaId) {
-        return repository.findById(contaId)
-                .orElseThrow(() -> new NegocioException("Conta não encontrada"));
-    }
-
-    @Transactional
-    public void verificarSeContaExiste(String contaId) {
-        if (!repository.existsById(contaId)) {
-            throw new NegocioException("Conta não encontrada");
-        }
-    }
-
-    @Transactional
     public Conta salvar(Conta conta) {
         Conta con = repository.findByNome(conta.getNome()).orElse(null);
 
@@ -54,6 +36,40 @@ public class ContaService {
         conta.setUsuario(usuarioService.buscar(conta.getUsuario().getId()));
 
         return repository.save(conta);
+    }
+
+    @Transactional
+    public List<Conta> buscar() {
+        return repository.findAll();
+    }
+
+    @Transactional
+    public Conta buscar(String contaId) {
+        if (contaId == null) {
+            throw new NegocioException("Id não informado");
+        }
+
+        return repository.findById(contaId)
+                .orElseThrow(() -> new NegocioException("Conta não encontrada"));
+    }
+
+    @Transactional
+    public void verificarSeContaExiste(String contaId) {
+        if (contaId == null) {
+            throw new NegocioException("Id não informado");
+        }
+
+        if (!repository.existsById(contaId)) {
+            throw new NegocioException("Conta não encontrada");
+        }
+    }
+
+    @Transactional
+    public void excluir(String contaId) {
+        if (contaId == null) {
+            throw new NegocioException("Id não informado");
+        }
+        repository.deleteById(contaId);
     }
 
     @Transactional
@@ -78,10 +94,5 @@ public class ContaService {
         UpdateResult result = mongoTemplate.updateFirst(query, update, Conta.class);
 
         return result.getModifiedCount() > 0;
-    }
-
-    @Transactional
-    public void excluir(String contaId) {
-        repository.deleteById(contaId);
     }
 }

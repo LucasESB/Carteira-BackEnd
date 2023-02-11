@@ -323,5 +323,9 @@ public class TransacaoControllerTest {
 
         mockMvc.perform(get("/transacoes/{transacoeId}", transacaoResponse.getId()))
                 .andExpect(status().isBadRequest());
+
+        Conta contaResponseAposDeletar = contaService.buscar(contaResponse.getId());
+
+        assertThat(contaResponseAposDeletar.getSaldo()).isEqualTo(contaResponse.getSaldo());
     }
 }

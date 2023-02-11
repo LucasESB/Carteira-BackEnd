@@ -23,31 +23,6 @@ public class TransacaoService {
     private ContaService contaService;
 
     @Transactional
-    public List<Transacao> buscar(String dataTransacaoInicial, String dataTransacaoFinal) {
-        try {
-            Date data1 = DataHora.stringParseDate(dataTransacaoInicial, "yyyy-MM-dd");
-            Date data2 = DataHora.stringParseDate(dataTransacaoFinal, "yyyy-MM-dd");
-
-            return repository.findByDataTransacao(data1, data2);
-        } catch (ParseException ex) {
-            throw new NegocioException("A data deve ser informada no formato 'yyyy-MM-dd'");
-        }
-    }
-
-    @Transactional
-    public Transacao buscar(String transacaoId) {
-        return repository.findById(transacaoId)
-                .orElseThrow(() -> new NegocioException("Transação não encontrada"));
-    }
-
-    @Transactional
-    public void verificarSeTransacaoExiste(String transacaoId) {
-        if (!repository.existsById(transacaoId)) {
-            throw new NegocioException("Transação não encontrada");
-        }
-    }
-
-    @Transactional
     public Transacao salvar(Transacao transacao) {
         transacao.setCategoria(categoriaService.buscar(transacao.getCategoria().getId()));
         transacao.setUsuario(usuarioService.buscar(transacao.getUsuario().getId()));
@@ -79,17 +54,15 @@ public class TransacaoService {
     }
 
     private void varificarSaldoParaTransacaoInvalido(Transacao transacao, Transacao transacaoAnterior) {
-        double saldoConta = 0.00;
-
-        if (!transacao.getCategoria().getTipo().equals(TipoCategoria.DESPESA)) {
+        if (transacao.getCategoria().getTipo().equals(TipoCategoria.RECEITA)) {
             return;
         }
+
+        double saldoConta = 0.00;
 
         if (transacaoAnterior != null) {
             if (!transacaoAnterior.getConta().getId().equals(transacao.getConta().getId())) {
                 saldoConta = transacao.getConta().getSaldo();
-            } else if (transacaoAnterior.getCategoria().getTipo().equals(TipoCategoria.RECEITA)) {
-                saldoConta = transacao.getConta().getSaldo() - transacaoAnterior.getValor();
             } else {
                 saldoConta = transacao.getConta().getSaldo() + transacaoAnterior.getValor();
             }
@@ -111,7 +84,42 @@ public class TransacaoService {
     }
 
     @Transactional
+    public List<Transacao> buscar(String dataTransacaoInicial, String dataTransacaoFinal) {
+        try {
+            Date data1 = DataHora.stringParseDate(dataTransacaoInicial, "yyyy-MM-dd");
+            Date data2 = DataHora.stringParseDate(dataTransacaoFinal, "yyyy-MM-dd");
+
+            return repository.findByDataTransacao(data1, data2);
+        } catch (ParseException ex) {
+            throw new NegocioException("A data deve ser informada no formato 'yyyy-MM-dd'");
+        }
+    }
+
+    @Transactional
+    public Transacao buscar(String transacaoId) {
+        if (transacaoId == null) {
+            throw new NegocioException("Id não informado");
+        }
+
+        return repository.findById(transacaoId)
+                .orElseThrow(() -> new NegocioException("Transação não encontrada"));
+    }
+
+    @Transactional
+    public void verificarSeTransacaoExiste(String transacaoId) {
+        if (transacaoId == null) {
+            throw new NegocioException("Id não informado");
+        }
+
+        if (!repository.existsById(transacaoId)) {
+            throw new NegocioException("Transação não encontrada");
+        }
+    }
+
+    @Transactional
     public void excluir(String transacaoId) {
+        Transacao transacao = buscar(transacaoId);
+        estornarValorTransacao(transacao);
         repository.deleteById(transacaoId);
     }
 }
