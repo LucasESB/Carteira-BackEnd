@@ -1,4 +1,4 @@
-package carteira.common;
+package carteira.configs.common;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;

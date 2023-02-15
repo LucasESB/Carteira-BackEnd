@@ -1,7 +1,7 @@
 package carteira.domain.service;
 
 import carteira.domain.exception.NegocioException;
-import carteira.domain.model.TipoCategoria;
+import carteira.domain.enums.TipoCategoriaEnum;
 import carteira.domain.model.Transacao;
 import carteira.domain.repository.TransacaoRepository;
 import carteira.utilitarios.DataHora;
@@ -44,7 +44,7 @@ public class TransacaoService {
 
         transacao = repository.save(transacao);
 
-        if (transacao.getCategoria().getTipo().equals(TipoCategoria.RECEITA)) {
+        if (transacao.getCategoria().getTipo().equals(TipoCategoriaEnum.RECEITA)) {
             contaService.adicionarValor(transacao.getConta().getId(), transacao.getValor());
         } else {
             contaService.removerValor(transacao.getConta().getId(), transacao.getValor());
@@ -54,7 +54,7 @@ public class TransacaoService {
     }
 
     private void varificarSaldoParaTransacaoInvalido(Transacao transacao, Transacao transacaoAnterior) {
-        if (transacao.getCategoria().getTipo().equals(TipoCategoria.RECEITA)) {
+        if (transacao.getCategoria().getTipo().equals(TipoCategoriaEnum.RECEITA)) {
             return;
         }
 
@@ -76,7 +76,7 @@ public class TransacaoService {
     }
 
     private void estornarValorTransacao(Transacao transacao) {
-        if (transacao.getCategoria().getTipo().equals(TipoCategoria.RECEITA)) {
+        if (transacao.getCategoria().getTipo().equals(TipoCategoriaEnum.RECEITA)) {
             contaService.removerValor(transacao.getConta().getId(), transacao.getValor());
         } else {
             contaService.adicionarValor(transacao.getConta().getId(), transacao.getValor());

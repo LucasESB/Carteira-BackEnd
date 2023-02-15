@@ -1,6 +1,6 @@
 package carteira.api.model;
 
-import carteira.domain.model.TipoCategoria;
+import carteira.domain.enums.TipoCategoriaEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,5 +10,5 @@ public class CategoriaReduzidoModel {
 
     private String id;
     private String nome;
-    private TipoCategoria tipo;
+    private TipoCategoriaEnum tipo;
 }

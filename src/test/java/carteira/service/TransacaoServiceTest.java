@@ -1,5 +1,6 @@
 package carteira.service;
 
+import carteira.domain.enums.TipoCategoriaEnum;
 import carteira.domain.exception.NegocioException;
 import carteira.domain.model.*;
 import carteira.domain.repository.CategoriaRepository;
@@ -50,7 +51,7 @@ public class TransacaoServiceTest {
 
         Categoria categoria = new Categoria();
         categoria.setId("1");
-        categoria.setTipo(TipoCategoria.RECEITA);
+        categoria.setTipo(TipoCategoriaEnum.RECEITA);
         categoria.setNome("Renda extra");
 
         Mockito.when(categoriaRepository.findById(categoria.getId()))
@@ -93,7 +94,7 @@ public class TransacaoServiceTest {
 
         Categoria categoria = new Categoria();
         categoria.setId("1");
-        categoria.setTipo(TipoCategoria.DESPESA);
+        categoria.setTipo(TipoCategoriaEnum.DESPESA);
         categoria.setNome("Internet");
 
         Mockito.when(categoriaRepository.findById(categoria.getId()))
@@ -119,7 +120,7 @@ public class TransacaoServiceTest {
 
         Categoria categoriaAnterior = new Categoria();
         categoriaAnterior.setId("2");
-        categoriaAnterior.setTipo(TipoCategoria.RECEITA);
+        categoriaAnterior.setTipo(TipoCategoriaEnum.RECEITA);
         categoriaAnterior.setNome("Renda extra");
 
         Conta contaAnterior = new Conta();

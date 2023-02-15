@@ -1,6 +1,6 @@
 package carteira.api.input;
 
-import carteira.domain.model.TipoCategoria;
+import carteira.domain.enums.TipoCategoriaEnum;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -18,7 +18,7 @@ public class CategoriaInput {
     private String nome;
 
     @NotNull
-    private TipoCategoria tipo;
+    private TipoCategoriaEnum tipo;
 
     @Valid
     @NotNull

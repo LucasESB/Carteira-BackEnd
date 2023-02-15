@@ -1,5 +1,6 @@
 package carteira.domain.model;
 
+import carteira.domain.enums.TipoCategoriaEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class Categoria {
     @Indexed(unique = true)
     private String nome;
 
-    private TipoCategoria tipo;
+    private TipoCategoriaEnum tipo;
 
     @DBRef
     private Usuario usuario;

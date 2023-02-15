@@ -1,7 +1,6 @@
 package carteira.api.controller;
 
 import carteira.api.input.CategoriaInput;
-import carteira.api.model.CategoriaModel;
 import carteira.assembler.CategoriaAssembler;
 import carteira.domain.model.Categoria;
 import carteira.domain.service.CategoriaService;
@@ -23,13 +22,13 @@ public class CategoriaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CategoriaModel inserir(@Valid @RequestBody CategoriaInput input) {
+    public carteira.api.model.CategoriaModel inserir(@Valid @RequestBody CategoriaInput input) {
         Categoria categoria = categoriaAssembler.toEntity(input);
         return categoriaAssembler.toModel(categoriaService.salvar(categoria));
     }
 
     @PutMapping("/{categoriaId}")
-    public ResponseEntity<CategoriaModel> atualizar(@Valid @RequestBody CategoriaInput input, @PathVariable String categoriaId) {
+    public ResponseEntity<carteira.api.model.CategoriaModel> atualizar(@Valid @RequestBody CategoriaInput input, @PathVariable String categoriaId) {
         categoriaService.verificarSeCategoriaExiste(categoriaId);
 
         Categoria categoria = categoriaAssembler.toEntity(input);
@@ -40,12 +39,12 @@ public class CategoriaController {
     }
 
     @GetMapping
-    public List<CategoriaModel> buscar() {
+    public List<carteira.api.model.CategoriaModel> buscar() {
         return categoriaAssembler.toCollectionModel(categoriaService.buscar());
     }
 
     @GetMapping("/{categoriaId}")
-    public CategoriaModel buscar(@PathVariable String categoriaId) {
+    public carteira.api.model.CategoriaModel buscar(@PathVariable String categoriaId) {
         return categoriaAssembler.toModel(categoriaService.buscar(categoriaId));
     }
 

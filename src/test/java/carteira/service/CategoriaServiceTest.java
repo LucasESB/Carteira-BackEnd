@@ -2,7 +2,7 @@ package carteira.service;
 
 import carteira.domain.exception.NegocioException;
 import carteira.domain.model.Categoria;
-import carteira.domain.model.TipoCategoria;
+import carteira.domain.enums.TipoCategoriaEnum;
 import carteira.domain.model.Usuario;
 import carteira.domain.repository.CategoriaRepository;
 import carteira.domain.repository.UsuarioRepository;
@@ -43,7 +43,7 @@ public class CategoriaServiceTest {
                 .thenReturn(Optional.of(usuario));
 
         Categoria categoria = new Categoria();
-        categoria.setTipo(TipoCategoria.RECEITA);
+        categoria.setTipo(TipoCategoriaEnum.RECEITA);
         categoria.setNome("Salário");
         categoria.setUsuario(usuario);
 
@@ -67,13 +67,13 @@ public class CategoriaServiceTest {
         usuario.setSenha("lucas1234578");
 
         Categoria categoria = new Categoria();
-        categoria.setTipo(TipoCategoria.RECEITA);
+        categoria.setTipo(TipoCategoriaEnum.RECEITA);
         categoria.setNome("Salário");
         categoria.setUsuario(usuario);
 
         Categoria categoriaRetorno = new Categoria();
         categoriaRetorno.setId("2");
-        categoriaRetorno.setTipo(TipoCategoria.RECEITA);
+        categoriaRetorno.setTipo(TipoCategoriaEnum.RECEITA);
         categoriaRetorno.setNome("Renda extra");
         categoriaRetorno.setUsuario(usuario);
 

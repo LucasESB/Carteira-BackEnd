@@ -1,8 +1,7 @@
 package carteira.controller;
 
 import carteira.domain.model.Categoria;
-import carteira.domain.model.Conta;
-import carteira.domain.model.TipoCategoria;
+import carteira.domain.enums.TipoCategoriaEnum;
 import carteira.domain.model.Usuario;
 import carteira.domain.service.CategoriaService;
 import carteira.domain.service.UsuarioService;
@@ -49,7 +48,7 @@ public class CategoriaControllerTest {
 
         Categoria categoria = new Categoria();
         categoria.setNome("Salario");
-        categoria.setTipo(TipoCategoria.RECEITA);
+        categoria.setTipo(TipoCategoriaEnum.RECEITA);
         categoria.setUsuario(usuarioResponse);
 
         MockHttpServletResponse response = mockMvc.perform(post("/categorias")
@@ -82,7 +81,7 @@ public class CategoriaControllerTest {
 
         Categoria categoria = new Categoria();
         categoria.setNome("Internet");
-        categoria.setTipo(TipoCategoria.RECEITA);
+        categoria.setTipo(TipoCategoriaEnum.RECEITA);
         categoria.setUsuario(usuarioResponse);
 
         Categoria categoriaResponse = categoriaService.salvar(categoria);
@@ -96,7 +95,7 @@ public class CategoriaControllerTest {
 
         categoria.setId(categoriaResponse.getId());
         categoria.setNome("Lanche");
-        categoria.setTipo(TipoCategoria.DESPESA);
+        categoria.setTipo(TipoCategoriaEnum.DESPESA);
         categoria.setUsuario(usuarioResponse);
 
         MockHttpServletResponse response = mockMvc.perform(put("/categorias/{categoriaId}", categoriaResponse.getId())
@@ -135,7 +134,7 @@ public class CategoriaControllerTest {
 
         Categoria categoria = new Categoria();
         categoria.setNome("Investimentos");
-        categoria.setTipo(TipoCategoria.RECEITA);
+        categoria.setTipo(TipoCategoriaEnum.RECEITA);
         categoria.setUsuario(usuarioResponse);
 
         Categoria categoriaResponse = categoriaService.salvar(categoria);
@@ -169,7 +168,7 @@ public class CategoriaControllerTest {
 
         Categoria categoria = new Categoria();
         categoria.setNome("Faculdade");
-        categoria.setTipo(TipoCategoria.DESPESA);
+        categoria.setTipo(TipoCategoriaEnum.DESPESA);
         categoria.setUsuario(usuarioResponse);
 
         Categoria categoriaResponse = categoriaService.salvar(categoria);

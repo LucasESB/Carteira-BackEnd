@@ -1,5 +1,6 @@
 package carteira.controller;
 
+import carteira.domain.enums.TipoCategoriaEnum;
 import carteira.domain.model.*;
 import carteira.domain.service.CategoriaService;
 import carteira.domain.service.ContaService;
@@ -57,7 +58,7 @@ public class TransacaoControllerTest {
 
         Categoria categoria = new Categoria();
         categoria.setNome("Categoria teste 1");
-        categoria.setTipo(TipoCategoria.RECEITA);
+        categoria.setTipo(TipoCategoriaEnum.RECEITA);
         categoria.setUsuario(usuarioResponse);
 
         Categoria categoriaResponse = categoriaService.salvar(categoria);
@@ -121,7 +122,7 @@ public class TransacaoControllerTest {
 
         Categoria categoria = new Categoria();
         categoria.setNome("Categoria teste 2");
-        categoria.setTipo(TipoCategoria.RECEITA);
+        categoria.setTipo(TipoCategoriaEnum.RECEITA);
         categoria.setUsuario(usuarioResponse);
 
         Categoria categoriaResponse = categoriaService.salvar(categoria);
@@ -152,7 +153,7 @@ public class TransacaoControllerTest {
 
         categoria = new Categoria();
         categoria.setNome("Categoria teste 3");
-        categoria.setTipo(TipoCategoria.DESPESA);
+        categoria.setTipo(TipoCategoriaEnum.DESPESA);
         categoria.setUsuario(usuarioResponse);
 
         categoriaResponse = categoriaService.salvar(categoria);
@@ -230,7 +231,7 @@ public class TransacaoControllerTest {
 
         Categoria categoria = new Categoria();
         categoria.setNome("Categoria teste 4");
-        categoria.setTipo(TipoCategoria.RECEITA);
+        categoria.setTipo(TipoCategoriaEnum.RECEITA);
         categoria.setUsuario(usuarioResponse);
 
         Categoria categoriaResponse = categoriaService.salvar(categoria);
@@ -296,7 +297,7 @@ public class TransacaoControllerTest {
 
         Categoria categoria = new Categoria();
         categoria.setNome("Categoria teste 5");
-        categoria.setTipo(TipoCategoria.RECEITA);
+        categoria.setTipo(TipoCategoriaEnum.RECEITA);
         categoria.setUsuario(usuarioResponse);
 
         Categoria categoriaResponse = categoriaService.salvar(categoria);

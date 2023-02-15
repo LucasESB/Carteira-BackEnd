@@ -1,7 +1,6 @@
 package carteira.assembler;
 
 import carteira.api.input.CategoriaInput;
-import carteira.api.model.CategoriaModel;
 import carteira.domain.model.Categoria;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -16,11 +15,11 @@ public class CategoriaAssembler {
 
     private ModelMapper modelMapper;
 
-    public CategoriaModel toModel(Categoria categoria) {
-        return modelMapper.map(categoria, CategoriaModel.class);
+    public carteira.api.model.CategoriaModel toModel(Categoria categoria) {
+        return modelMapper.map(categoria, carteira.api.model.CategoriaModel.class);
     }
 
-    public List<CategoriaModel> toCollectionModel(List<Categoria> list) {
+    public List<carteira.api.model.CategoriaModel> toCollectionModel(List<Categoria> list) {
         return list.stream()
                 .map(this::toModel)
                 .collect(Collectors.toList());
