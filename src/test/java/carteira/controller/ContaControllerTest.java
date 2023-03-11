@@ -51,6 +51,7 @@ public class ContaControllerTest {
         conta.setUsuario(usuarioResponse);
 
         MockHttpServletResponse response = mockMvc.perform(post("/contas")
+                        .header("Authorization", "Basic am9zZWx1Y2FzOmpvc2UxMjM0NTY3OA==")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(conta)))
@@ -98,6 +99,7 @@ public class ContaControllerTest {
         conta.setUsuario(usuarioResponse);
 
         MockHttpServletResponse response = mockMvc.perform(put("/contas/{contaId}", contaResponse.getId())
+                        .header("Authorization", "Basic am9zZWVkdWFyZG8yOmpvc2UxMjM0NTY3OA==")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(conta)))
@@ -118,7 +120,15 @@ public class ContaControllerTest {
 
     @Test
     public void retornarSucesso_QuandoBuscarTodasContas() throws Exception {
-        mockMvc.perform(get("/contas"))
+        Usuario usuario = new Usuario();
+        usuario.setNome("Luciana");
+        usuario.setUsuario("luciana");
+        usuario.setSenha("luci12345678");
+
+        usuarioService.salvar(usuario);
+
+        mockMvc.perform(get("/contas")
+                        .header("Authorization", "Basic bHVjaWFuYTpsdWNpMTIzNDU2Nzg="))
                 .andExpect(status().isOk());
     }
 
@@ -140,7 +150,8 @@ public class ContaControllerTest {
 
         conta.setId(contaResponse.getId());
 
-        MockHttpServletResponse response = mockMvc.perform(get("/contas/{contaId}", contaResponse.getId()))
+        MockHttpServletResponse response = mockMvc.perform(get("/contas/{contaId}", contaResponse.getId())
+                        .header("Authorization", "Basic am9zZWFudG9uaW86am9zZTEyMzQ1Njc4"))
                 .andReturn()
                 .getResponse();
 
@@ -172,10 +183,12 @@ public class ContaControllerTest {
 
         Conta contaResponse = contaService.salvar(conta);
 
-        mockMvc.perform(delete("/contas/{contaId}", contaResponse.getId()))
+        mockMvc.perform(delete("/contas/{contaId}", contaResponse.getId())
+                        .header("Authorization", "Basic am9lbGp1bmlvOmpvZWwxMjM0NTY3OA=="))
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/contas/{contaId}", contaResponse.getId()))
+        mockMvc.perform(get("/contas/{contaId}", contaResponse.getId())
+                        .header("Authorization", "Basic am9lbGp1bmlvOmpvZWwxMjM0NTY3OA=="))
                 .andExpect(status().isBadRequest());
     }
 }

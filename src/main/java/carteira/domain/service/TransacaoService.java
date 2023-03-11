@@ -34,7 +34,6 @@ public class TransacaoService {
             transacaoAnterior = buscar(transacao.getId());
         }
 
-        //TODO: Criar testes atualizando com contas diferentes, de categorias de tipo diferentes
         varificarSaldoParaTransacaoInvalido(transacao, transacaoAnterior);
 
         if (transacaoAnterior != null) {

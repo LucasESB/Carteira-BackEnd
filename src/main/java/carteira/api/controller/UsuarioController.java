@@ -3,12 +3,12 @@ package carteira.api.controller;
 import carteira.api.input.UsuarioInput;
 import carteira.api.model.UsuarioModel;
 import carteira.assembler.UsuarioAssembler;
-import carteira.domain.exception.NegocioException;
 import carteira.domain.model.Usuario;
 import carteira.domain.service.UsuarioService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -29,6 +29,7 @@ public class UsuarioController {
         return usuarioAssembler.toModel(usuarioService.salvar(usuario));
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @PutMapping("/{usuarioId}")
     public ResponseEntity<UsuarioModel> atualizar(@Valid @RequestBody UsuarioInput usuarioInput, @PathVariable String usuarioId) {
         usuarioService.verificarSeUsuarioExiste(usuarioId);

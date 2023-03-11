@@ -79,6 +79,7 @@ public class TransacaoControllerTest {
         transacao.setConta(contaResponse);
 
         MockHttpServletResponse response = mockMvc.perform(post("/transacoes")
+                        .header("Authorization", "Basic c29waGlhOnNvcGhpYTEyMzQ1Njc4")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(transacao)))
@@ -175,6 +176,7 @@ public class TransacaoControllerTest {
         transacao.setConta(contaResponse);
 
         MockHttpServletResponse response = mockMvc.perform(put("/transacoes/{transacoeId}", transacaoResponse.getId())
+                        .header("Authorization", "Basic bG9yZW5hOmxvcmVuYTEyMzQ1Njc4")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(transacao)))
@@ -213,10 +215,18 @@ public class TransacaoControllerTest {
 
     @Test
     public void retornarSucesso_QuandoBuscarTodasTransacoes() throws Exception {
+        Usuario usuario = new Usuario();
+        usuario.setNome("Claudia");
+        usuario.setUsuario("claudia");
+        usuario.setSenha("clau12345678");
+
+        usuarioService.salvar(usuario);
+
         mockMvc.perform(get("/transacoes?dataInicial="
                         + DataHora.formatarData(new Date(), "yyyy-MM-dd")
                         + "&dataFinal="
-                        + DataHora.formatarData(new Date(), "yyyy-MM-dd")))
+                        + DataHora.formatarData(new Date(), "yyyy-MM-dd"))
+                        .header("Authorization", "Basic Y2xhdWRpYTpjbGF1MTIzNDU2Nzg="))
                 .andExpect(status().isOk());
     }
 
@@ -256,7 +266,8 @@ public class TransacaoControllerTest {
         transacao.setId(transacaoResponse.getId());
         transacao.setDataCadastro(transacaoResponse.getDataCadastro());
 
-        MockHttpServletResponse response = mockMvc.perform(get("/transacoes/{transacoeId}", transacaoResponse.getId()))
+        MockHttpServletResponse response = mockMvc.perform(get("/transacoes/{transacoeId}", transacaoResponse.getId())
+                        .header("Authorization", "Basic cmVnaW5hOnJlZ2luYTEyMzQ1Njc4"))
                 .andReturn()
                 .getResponse();
 
@@ -319,10 +330,12 @@ public class TransacaoControllerTest {
 
         Transacao transacaoResponse = transacaoService.salvar(transacao);
 
-        mockMvc.perform(delete("/transacoes/{transacoeId}", transacaoResponse.getId()))
+        mockMvc.perform(delete("/transacoes/{transacoeId}", transacaoResponse.getId())
+                        .header("Authorization", "Basic cmVuYXRvOnJlbmF0bzEyMzQ1Njc4"))
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/transacoes/{transacoeId}", transacaoResponse.getId()))
+        mockMvc.perform(get("/transacoes/{transacoeId}", transacaoResponse.getId())
+                        .header("Authorization", "Basic cmVuYXRvOnJlbmF0bzEyMzQ1Njc4"))
                 .andExpect(status().isBadRequest());
 
         Conta contaResponseAposDeletar = contaService.buscar(contaResponse.getId());

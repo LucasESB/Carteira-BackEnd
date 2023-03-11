@@ -1,5 +1,6 @@
 package carteira.domain.model;
 
+import carteira.domain.enums.RoleEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -11,8 +12,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @Getter
@@ -33,9 +35,11 @@ public class Usuario implements UserDetails {
 
     private String senha;
 
+    private List<RoleEnum> roles;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return this.roles;
     }
 
     @Override
@@ -66,5 +70,12 @@ public class Usuario implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void addRoles(RoleEnum role){
+        if(roles == null){
+            roles = new ArrayList<>();
+        }
+        roles.add(role);
     }
 }

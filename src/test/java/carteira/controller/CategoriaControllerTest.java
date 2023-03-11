@@ -52,6 +52,7 @@ public class CategoriaControllerTest {
         categoria.setUsuario(usuarioResponse);
 
         MockHttpServletResponse response = mockMvc.perform(post("/categorias")
+                        .header("Authorization", "Basic dml0b3I6dml0b3IxMjM0NTY3OA==")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoria)))
@@ -99,6 +100,7 @@ public class CategoriaControllerTest {
         categoria.setUsuario(usuarioResponse);
 
         MockHttpServletResponse response = mockMvc.perform(put("/categorias/{categoriaId}", categoriaResponse.getId())
+                        .header("Authorization", "Basic Z2FicmllbDpnYWJyaWVsMTIzNDU2Nzg=")
                         .accept(MediaType.APPLICATION_JSON)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(categoria)))
@@ -119,7 +121,15 @@ public class CategoriaControllerTest {
 
     @Test
     public void retornarSucesso_QuandoBuscarTodasCategorias() throws Exception {
-        mockMvc.perform(get("/categorias"))
+        Usuario usuario = new Usuario();
+        usuario.setNome("Rosa");
+        usuario.setUsuario("rosa");
+        usuario.setSenha("rosa12345678");
+
+        usuarioService.salvar(usuario);
+
+        mockMvc.perform(get("/categorias")
+                        .header("Authorization", "Basic cm9zYTpyb3NhMTIzNDU2Nzg="))
                 .andExpect(status().isOk());
     }
 
@@ -141,7 +151,8 @@ public class CategoriaControllerTest {
 
         categoria.setId(categoriaResponse.getId());
 
-        MockHttpServletResponse response = mockMvc.perform(get("/categorias/{categoriaId}", categoriaResponse.getId()))
+        MockHttpServletResponse response = mockMvc.perform(get("/categorias/{categoriaId}", categoriaResponse.getId())
+                        .header("Authorization", "Basic am9zZWhlbnJpcXVlOmpvc2UxMjM0NTY3OA=="))
                 .andReturn()
                 .getResponse();
 
@@ -173,10 +184,12 @@ public class CategoriaControllerTest {
 
         Categoria categoriaResponse = categoriaService.salvar(categoria);
 
-        mockMvc.perform(delete("/categorias/{categoriaId}", categoriaResponse.getId()))
+        mockMvc.perform(delete("/categorias/{categoriaId}", categoriaResponse.getId())
+                        .header("Authorization", "Basic ZWRpbWFyOmVkaW1hcjEyMzQ1Njc4"))
                 .andExpect(status().isNoContent());
 
-        mockMvc.perform(get("/categorias/{categoriaId}", categoriaResponse.getId()))
+        mockMvc.perform(get("/categorias/{categoriaId}", categoriaResponse.getId())
+                        .header("Authorization", "Basic ZWRpbWFyOmVkaW1hcjEyMzQ1Njc4"))
                 .andExpect(status().isBadRequest());
     }
 }
